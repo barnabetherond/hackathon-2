@@ -1,27 +1,29 @@
 import numpy as np
 import copy
 import heapq
+from collections import deque
+
 class Board:
     def __init__(self, chaine):
         self.plateau = chaine
-        
+        id = ''
+        for i in range(3):
+            for j in range(3):
+                id += str(self.plateau[i][j])
+        self.id = id
+
     
     def __eq__(self, chaine):
         return self.plateau == chaine.plateau
     
     def __hash__(self):
-        return hash(tuple[self.plateau])
+        return hash((self.id))
     
     def __repr__(self):
-        print(self.plateau)
+        return str(self.plateau)
 
 
-class deque:
-    def __init__(self, list):
-        self.list = list
 
-    def popy(self):
-        return self.list.popleft()
     
     
         
@@ -68,31 +70,34 @@ def voisins(matrice):
 
 
 def crea(board_init, goal):
-    file = deque([])
-    file.list.append(board_init)
+    file = deque()
+    file.append(board_init)
     dico = {}
     visited = set()
     while file:
-        board = file.popy()
+        board = file.popleft()
+        if board not in dico.keys():
+            dico[board] = []
         visited.add(board)
         V = voisins(board.plateau)
-        for plateau in V:
-            if plateau in visited:
-                V.pop(plateau)
-        dico[board] = V
         for voisin in V:
-            file.list.append(voisin)
+            if voisins not in visited:
+                file.append(Board(voisin))
+                dico[board].append(Board(voisin))
+                
         if board == goal:
-            return dico
+           return dico
         
 
+import heapq
+from collections import deque
+
 def dijkstra(graph, start, target):
-    # Initialisation
-    priority_queue = [(0, start, [])]  # (distance, node, path)
+    queue = deque([(start, 0, [])])  # (node, distance, path)
     visited = set()
     
-    while priority_queue:
-        (current_distance, current_node, path) = heapq.heappop(priority_queue)
+    while queue:
+        current_node, current_distance, path = queue.popleft()
         
         if current_node in visited:
             continue
@@ -100,16 +105,15 @@ def dijkstra(graph, start, target):
         path = path + [current_node]
         visited.add(current_node)
         
-        # Arrêt si on atteint la cible
         if current_node == target:
             return current_distance, path
         
-        # Exploration des voisins
-        for neighbor, weight in graph.get(current_node, {}).items():
+        for neighbor in graph.get(current_node, []):
             if neighbor not in visited:
-                heapq.heappush(priority_queue, (current_distance + weight, neighbor, path))
+                queue.append((neighbor, current_distance + 1, path))
     
     return float("inf"), []
+    
     
 
 goal = Board([[1, 2, 3],
