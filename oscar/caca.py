@@ -1,21 +1,21 @@
-import random
+# import random
 
-def generer_matrice_3x3():
-    chiffres = list(range(0, 9))  # Liste des chiffres de 0 à 8
-    random.shuffle(chiffres)      # Mélanger les chiffres aléatoirement
+# def generer_matrice_3x3():
+#     chiffres = list(range(0, 9))  # Liste des chiffres de 0 à 8
+#     random.shuffle(chiffres)      # Mélanger les chiffres aléatoirement
 
-    # Générer une matrice 3x3
-    matrice = [chiffres[i:i + 3] for i in range(0, 9, 3)]
-    return matrice
+#     # Générer une matrice 3x3
+#     matrice = [chiffres[i:i + 3] for i in range(0, 9, 3)]
+#     return matrice
 
-def afficher_matrice(matrice):
-    for ligne in matrice:
-        print(ligne)
+# def afficher_matrice(matrice):
+#     for ligne in matrice:
+#         print(ligne)
 
-# Exemple d'utilisation
-matrice = generer_matrice_3x3()
-print("Matrice 3x3 aléatoire avec 0 à 8 :")
-afficher_matrice(matrice)
+# # Exemple d'utilisation
+# matrice = generer_matrice_3x3()
+# print("Matrice 3x3 aléatoire avec 0 à 8 :")
+# afficher_matrice(matrice)
 
 
 import copy
