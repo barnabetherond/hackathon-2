@@ -106,7 +106,7 @@ def dijkstra(graph, start, target):
         visited.add(current_node)
         
         if current_node == target:
-            return current_distance, path
+            return  path
         
         for neighbor in graph.get(current_node, []):
             if neighbor not in visited:
@@ -125,5 +125,7 @@ start = Board([[1, 2, 3],
               [7, 8, 6]])
 
 graph = crea(start, goal)
-print(dijkstra(graph, start, goal))
+M = dijkstra(graph, start, goal)
+for i in M:
+    print(i)
     
