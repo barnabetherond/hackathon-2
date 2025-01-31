@@ -1,52 +1,70 @@
-import heapq
+import random
 
-def dijkstra(graph, start, end):
-    # Initialisation des distances et du tas
-    distances = {node: float('inf') for node in graph}
-    distances[start] = 0
-    priority_queue = [(0, start)]
-    previous_nodes = {node: None for node in graph}
+def generer_matrice_3x3():
+    chiffres = list(range(0, 9))  # Liste des chiffres de 0 à 8
+    random.shuffle(chiffres)      # Mélanger les chiffres aléatoirement
 
-    while priority_queue:
-        current_distance, current_node = heapq.heappop(priority_queue)
+    # Générer une matrice 3x3
+    matrice = [chiffres[i:i + 3] for i in range(0, 9, 3)]
+    return matrice
 
-        # Si on atteint le sommet de destination
-        if current_node == end:
-            break
-
-        # Si on trouve une distance plus longue que celle déjà enregistrée, on passe
-        if current_distance > distances[current_node]:
-            continue
-
-        # Parcourir les voisins
-        for neighbor, weight in graph[current_node].items():
-            distance = current_distance + weight
-
-            # Si une distance plus courte est trouvée
-            if distance < distances[neighbor]:
-                distances[neighbor] = distance
-                previous_nodes[neighbor] = current_node
-                heapq.heappush(priority_queue, (distance, neighbor))
-
-    # Reconstruction du chemin le plus court
-    path = []
-    current = end
-    while current is not None:
-        path.append(current)
-        current = previous_nodes[current]
-    path.reverse()
-
-    return path, distances[end]
+def afficher_matrice(matrice):
+    for ligne in matrice:
+        print(ligne)
 
 # Exemple d'utilisation
-graph = {
-    'A': {'B': 1, 'C': 4},
-    'B': {'A': 1, 'C': 2, 'D': 5},
-    'C': {'A': 4, 'B': 2, 'D': 1},
-    'D': {'B': 5, 'C': 1}
-}
+matrice = generer_matrice_3x3()
+print("Matrice 3x3 aléatoire avec 0 à 8 :")
+afficher_matrice(matrice)
 
-start_node = 'A'
-end_node = 'D'
-shortest_path, shortest_distance = dijkstra(graph, start_node, end_node)
-print(f"Le plus court chemin de {start_node} à {end_node} est : {shortest_path} avec une distance de {shortest_distance}")
+
+import copy
+
+def trouver_position_zero(matrice):
+    for i, ligne in enumerate(matrice):
+        if 0 in ligne:
+            return (i, ligne.index(0))
+    return None
+
+def mouvements_possibles(position):
+    i, j = position
+    deplacements = []
+
+    # Vérification des mouvements possibles (haut, bas, gauche, droite)
+    if i > 0:  # Haut
+        deplacements.append((i - 1, j))
+    if i < 2:  # Bas
+        deplacements.append((i + 1, j))
+    if j > 0:  # Gauche
+        deplacements.append((i, j - 1))
+    if j < 2:  # Droite
+        deplacements.append((i, j + 1))
+
+    return deplacements
+
+def echanger_positions(matrice, pos1, pos2):
+    nouvelle_matrice = copy.deepcopy(matrice)
+    i1, j1 = pos1
+    i2, j2 = pos2
+    nouvelle_matrice[i1][j1], nouvelle_matrice[i2][j2] = nouvelle_matrice[i2][j2], nouvelle_matrice[i1][j1]
+    return nouvelle_matrice
+
+def generer_matrices_possibles(matrice):
+    position_zero = trouver_position_zero(matrice)
+    deplacements = mouvements_possibles(position_zero)
+
+    matrices_resultantes = []
+    for nouvelle_position in deplacements:
+        nouvelle_matrice = echanger_positions(matrice, position_zero, nouvelle_position)
+        matrices_resultantes.append(nouvelle_matrice)
+
+    return matrices_resultantes
+
+matrices_possibles = generer_matrices_possibles(matrice)
+
+print("Matrices résultantes après échanges possibles :")
+for idx, matrice_resultante in enumerate(matrices_possibles):
+    print(f"Mouvement {idx + 1} :")
+    afficher_matrice(matrice_resultante)
+
+
