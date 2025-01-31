@@ -26,7 +26,7 @@ class Board:
         return str(self.plateau)
 
 
-header = ft.Text(value="Bienvenue sur CCsolution2025byBaJu2Os (taquin resolver) !", color="white", weight=ft.FontWeight.BOLD)
+header = ft.Text(value="Bienvenue sur CCsolution2025byBaJu2Os (taquin resolver)", color="white", weight=ft.FontWeight.BOLD)
 squares = [ft.Image(src=f"{i}.jpg",width=10,height=10,border_radius=10, fit=ft.ImageFit.COVER) for i in range(1,10)]
 #shuffle = ft.Image(src="shuf.png",width=50,height=50)
 shuffle = ft.CupertinoFilledButton(content=ft.Text("Mélange"),opacity_on_click=0.3)
@@ -98,7 +98,7 @@ def alea_10mov(goal):
     L = []
     for i in range(30):
         board = goal
-        for i in range(10):
+        for j in range(40):
             V = voisins(board.plateau)
             board = Board(random.choice(V))
         L.append(board)
@@ -154,24 +154,30 @@ def main(page):
         page.update()
 
     def anim_solution(init):
+        indic_calc.visible=True
+        page.update()
         graph = crea(init, goal)
         sol = dijkstra(graph, init, goal)
+        indic_calc.visible=False
+        page.update()
         for board in sol:
-            print(board)
+            #print(board)
             actu_squares(board)
             page.update()
             time.sleep(0.5)
 
     page.window.width = 300
     page.window.height = 500
+    indic_calc=ft.Text(value="               Calcul de la solution...", color="white", visible=False)
     goal = Board([[1, 2, 3],
               [4, 5, 6],
               [7, 8, 0]])
-    #print("le code de babé marche")
+    actu_squares(board_5())
     page.add(
         ft.Column([header]),
         ft.GridView(squares, expand=False ,max_extent=100,spacing=10,run_spacing=10),
-        ft.Row(bottom,alignment=ft.MainAxisAlignment.CENTER, spacing=20)
+        ft.Row(bottom,alignment=ft.MainAxisAlignment.CENTER, spacing=20),
+        indic_calc
             )
     
     shuffle.on_click=lambda e: actu_squares(board_5())
